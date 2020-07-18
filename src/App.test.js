@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
+import { render, fireEvent, waitFor, getByLabelText } from "@testing-library/react";
 import App from "./App";
 import ContactForm from "./components/ContactForm";
 
@@ -24,7 +24,7 @@ test("properly validates First Name field", async () => {
   
   await waitFor(() => {
     const error = queryByText("Looks like there was an error: maxLength");
-    expect(error).not.toBeNull();
+    expect(error).toBeNull();
   });
 
   /*NOTE: This test is passing meaning that the firstName validation is incorrect*/
@@ -45,3 +45,19 @@ test("properly validates Last Name field", async () => {
     expect(error).toBeNull();
   });
 });
+
+test("properly validates Email field", async () => {
+  const { getByPlaceholderText, queryByText } = render(<ContactForm />);
+
+  const email = getByPlaceholderText("bluebill1049@hotmail.com");
+
+  fireEvent.change(email, { target: { value: "darrentebo83" }});
+  expect(email).toHaveValue("darrentebo83");
+
+  fireEvent.blur(email);
+
+  await waitFor(() => {
+    const error = queryByText("Looks like there was an error: invalid email format");
+    expect(error).not.toBeNull();
+  });
+})
