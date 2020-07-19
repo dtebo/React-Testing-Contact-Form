@@ -51,13 +51,13 @@ test("properly validates Email field", async () => {
 
   const email = getByPlaceholderText("bluebill1049@hotmail.com");
 
-  fireEvent.change(email, { target: { value: "darrentebo83" }});
-  expect(email).toHaveValue("darrentebo83");
+  fireEvent.change(email, { target: { value: "darrentebo83@outlook.com" }});
+  expect(email).toHaveValue("darrentebo83@outlook.com");
 
   fireEvent.blur(email);
 
   await waitFor(() => {
     const error = queryByText("Looks like there was an error: invalid email format");
-    expect(error).not.toBeNull();
+    expect(error).toBeNull();
   });
 })
