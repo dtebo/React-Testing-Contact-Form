@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from 'axios';
 
 const ContactForm = () => {
   const [data, setData] = useState();
@@ -12,13 +13,13 @@ const ContactForm = () => {
 
   return (
     <div className="App">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} data-testid="contact-form">
         <div>
           <label htmlFor="firstName">First Name*</label>
           <input
             name="firstName"
             placeholder="Edd"
-            ref={register({ required: true, maxLength: 3 })}
+            ref={register({ required: true, maxLength: 30 })}
           />
           {errors.firstName && (
             <p>Looks like there was an error: {errors.firstName.type}</p>
@@ -38,12 +39,15 @@ const ContactForm = () => {
         </div>
 
         <div>
-          <label htmlFor="email" placeholder="bluebill1049@hotmail.com">
+          <label htmlFor="email"> {/*NOTE: Found and fixed bug where placeholder was placed on the label instead of the input*/}
             Email*
           </label>
-          <input name="email" ref={register({ required: true })} />
+          <input name="email" placeholder="bluebill1049@hotmail.com" ref={register({ required: true, pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/})} />
           {errors.email && (
-            <p>Looks like there was an error: {errors.email.type}</p>
+            <p>
+              Looks like there was an error: {errors.email?.type === "required" && "required"}
+              {errors.email?.type === "pattern" && "invalid email format"}
+            </p>
           )}
         </div>
         <div>
